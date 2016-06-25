@@ -1,5 +1,4 @@
-import org.scalactic.TolerantNumerics
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.FlatSpec
 
 /**
   * Created by juho on 3/23/16.
@@ -8,20 +7,32 @@ class WageCalculatorSpec extends FlatSpec {
 
   "totalQuarters" should "be correct" in {
     assert(WageCalculator.totalQuarters(TimeStamp("1:00"), TimeStamp("2:00")) == 4)
+    assert(WageCalculator.totalQuarters(TimeStamp("4:00"), TimeStamp("9:00")) == 20)
+  }
+
+  "totalQuarters" should "be correct with overnight shift" in {
+    assert(WageCalculator.totalQuarters(TimeStamp("23:00"), TimeStamp("1:00")) == 8)
   }
 
   "normalQuarters" should "be correct with short new hours" in {
-    assert(WageCalculator.normalQuarters(0, TimeStamp("1:00"), TimeStamp("2:00")) == 4)
-    assert(WageCalculator.normalQuarters(30, TimeStamp("1:00"), TimeStamp("2:00")) == 2)
-    assert(WageCalculator.normalQuarters(32, TimeStamp("1:00"), TimeStamp("2:00")) == 0)
-    assert(WageCalculator.normalQuarters(34, TimeStamp("1:00"), TimeStamp("2:00")) == 0)
+    assert(WageCalculator.normalQuarters(0, TimeStamp("11:00"), TimeStamp("12:00")) == 4)
+    assert(WageCalculator.normalQuarters(30, TimeStamp("11:00"), TimeStamp("12:00")) == 2)
+    assert(WageCalculator.normalQuarters(32, TimeStamp("11:00"), TimeStamp("12:00")) == 0)
+    assert(WageCalculator.normalQuarters(34, TimeStamp("11:00"), TimeStamp("12:00")) == 0)
+    assert(WageCalculator.normalTime(TimeStamp("4:00"), TimeStamp("9:00")) == 12)
+    assert(WageCalculator.normalTime(TimeStamp("17:15"), TimeStamp("19:00")) == 3)
+  }
+
+  "normalQuarters" should "be correct when outside normal hours" in {
+    assert(WageCalculator.normalQuarters(0, TimeStamp("19:00"), TimeStamp("22:00")) == 0)
+    assert(WageCalculator.normalQuarters(30, TimeStamp("23:00"), TimeStamp("5:00")) == 0)
   }
 
   "normalQuarters" should "be correct with long new hours" in {
-    assert(WageCalculator.normalQuarters(0, TimeStamp("1:00"), TimeStamp("9:00")) == 32)
-    assert(WageCalculator.normalQuarters(1, TimeStamp("1:00"), TimeStamp("9:00")) == 31)
-    assert(WageCalculator.normalQuarters(0, TimeStamp("1:00"), TimeStamp("10:00")) == 32)
-    assert(WageCalculator.normalQuarters(1, TimeStamp("1:00"), TimeStamp("10:00")) == 31)
+    assert(WageCalculator.normalQuarters(0, TimeStamp("1:00"), TimeStamp("19:00")) == 32)
+    assert(WageCalculator.normalQuarters(1, TimeStamp("7:00"), TimeStamp("22:00")) == 31)
+    assert(WageCalculator.normalQuarters(0, TimeStamp("5:00"), TimeStamp("17:00")) == 32)
+    assert(WageCalculator.normalQuarters(1, TimeStamp("1:00"), TimeStamp("20:00")) == 31)
   }
 
   "normalQuarters" should "be correct with night work included" in {
@@ -62,7 +73,7 @@ class WageCalculatorSpec extends FlatSpec {
 
   "eveningWork" should "be correct with night work" in {
     assert(WageCalculator.eveningWork(TimeStamp("22:00"), TimeStamp("2:00")) == 16)
-    assert(WageCalculator.eveningWork(TimeStamp("17:00"), TimeStamp("2:00")) == 36)
-    assert(WageCalculator.eveningWork(TimeStamp("3:00"), TimeStamp("2:00")) == 88)
+    assert(WageCalculator.eveningWork(TimeStamp("17:00"), TimeStamp("2:00")) == 32)
+    assert(WageCalculator.eveningWork(TimeStamp("3:00"), TimeStamp("2:00")) == 44)
   }
 }

@@ -25,29 +25,33 @@ object WageCalculator {
     //    + eveningCompensation * eveningCompensation * 0.25
   }
 
-  def totalQuarters(start: TimeStamp, end: TimeStamp): Int = start.gap(end)
-
-  def normalQuarters(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
+  def totalQuarters(start: TimeStamp, end: TimeStamp): Int = {
     if (start.isBefore(end))
-      math.min(math.max(0, 32 - priorWork), start.gap(end))
-    else {
-      val dayHoursStart: TimeStamp = if (normalDayStart.isBefore(start)) start else normalDayStart
-      val dayHoursEnd: TimeStamp = if (normalDayEnd.isBefore(end)) normalDayEnd else end
+      start.gap(end)
+    else
+      start.gap(TimeStamp("24:00")) + TimeStamp("0:00").gap(end)
+  }
 
+  def normalTime(start: TimeStamp, end: TimeStamp): Int = {
+    val dayHoursStart: TimeStamp = if (normalDayStart.isBefore(start)) start else normalDayStart
+    val dayHoursEnd: TimeStamp = if (normalDayEnd.isBefore(end)) normalDayEnd else end
+
+    if (start.isBefore(end))
+      dayHoursStart.gap(dayHoursEnd)
+    else {
       // The normal hours in the beginning and end of the overnight shift
       val startHours = dayHoursStart.gap(normalDayEnd)
       val endHours = normalDayStart.gap(dayHoursEnd)
 
-      math.min(math.max(0, 32 - priorWork), startHours + endHours)
+      startHours + endHours
     }
   }
 
-  // TODO: what happens if workday is multiple days long
+  def normalQuarters(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
+    math.min(math.max(0, 32 - priorWork), normalTime(start, end))
+  }
+
   def eveningWork(start: TimeStamp, end: TimeStamp): Int = {
-    var totalTime = start.gap(end)
-    if (start.isBefore(end))
-      math.min(totalTime, start.gap(normalDayStart)) + math.min(totalTime, normalDayEnd.gap(end))
-    else
-      math.min(totalTime, start.gap(normalDayStart))
+    totalQuarters(start, end) - normalTime(start, end)
   }
 }
