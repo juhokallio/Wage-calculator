@@ -3,7 +3,11 @@
   *
   */
 case class Money(dollars: Int, cents: Int) {
-  def *(that: Int): Money = {
-    Money(dollars * that, cents * that)
+  def *(x: Int): Money = {
+    Money(dollars * x, cents * x)
+  }
+
+  def +(that: Money): Money = {
+    Money(dollars + that.dollars, cents * that.cents)
   }
 }

@@ -3,8 +3,8 @@
   */
 object WageCalculator {
 
-  val normalCompensation: Money = Money(3, 75) // divide by 4 or multiply with 0.25
-  val eveningCompensation: Money = Money(1, 15)
+  val normalCompensation: Money = Money(3, 75) // TODO: divide by 4 or multiply with 0.25
+  val eveningCompensation: Money = normalCompensation + Money(1, 15) // divide by 4 or multiply with 0.25
   val normalDayStart: TimeStamp = TimeStamp("6:00")
   val normalDayEnd: TimeStamp = TimeStamp("18:00")
 
@@ -20,9 +20,10 @@ object WageCalculator {
     * @return
     */
   def compensation(priorWork: Int, start: TimeStamp, end: TimeStamp): Money = {
-    normalCompensation * normalQuarters(priorWork, start, end)
-    //    normalCompensation * normalQuarters * 0.25
-    //    + eveningCompensation * eveningCompensation * 0.25
+    val normalMoney: Money = normalCompensation * normalQuarters(priorWork, start, end)
+    val eveningMoney: Money = eveningCompensation * eveningWork(start, end)
+
+    normalMoney + eveningMoney
   }
 
   def totalQuarters(start: TimeStamp, end: TimeStamp): Int = {
