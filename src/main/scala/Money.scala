@@ -1,5 +1,6 @@
-/**
-  * Created by juho on 6/24/16.
+/** A class for representing money
+  *
+  *
   */
 case class Money(dollars: Int, cents: Int) {
   def *(that: Int): Money = {
