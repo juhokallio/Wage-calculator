@@ -76,4 +76,23 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.eveningWork(TimeStamp("17:00"), TimeStamp("2:00")) == 32)
     assert(WageCalculator.eveningWork(TimeStamp("3:00"), TimeStamp("2:00")) == 44)
   }
+
+  "plus25work" should "be correct with normal days" in {
+    assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("7:00")) == 0)
+    assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("14:00")) == 0)
+    assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("16:00")) == 8)
+    assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("17:00")) == 8)
+  }
+
+  "plus25work" should "be correct with prior work" in {
+    assert(WageCalculator.plus25work(1, TimeStamp("6:00"), TimeStamp("14:00")) == 1)
+    assert(WageCalculator.plus25work(9, TimeStamp("6:00"), TimeStamp("14:00")) == 8)
+  }
+
+  "plus25work" should "be empty with overnight shift" in {
+    assert(WageCalculator.plus25work(0, TimeStamp("22:00"), TimeStamp("7:00")) == 4)
+    assert(WageCalculator.plus25work(2, TimeStamp("22:00"), TimeStamp("7:00")) == 6)
+    assert(WageCalculator.plus25work(22, TimeStamp("22:00"), TimeStamp("7:00")) == 8)
+    assert(WageCalculator.plus25work(2, TimeStamp("22:00"), TimeStamp("6:00")) == 2)
+  }
 }

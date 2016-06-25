@@ -54,4 +54,8 @@ object WageCalculator {
   def eveningWork(start: TimeStamp, end: TimeStamp): Int = {
     totalQuarters(start, end) - normalTime(start, end)
   }
+
+  def plus25work(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
+    return 0
+  }
 }
