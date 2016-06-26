@@ -5,6 +5,13 @@ package juho.wagecalculator
   */
 case class TimeStamp(timeStr: String) {
 
+  /** Time in quarters (15mins)
+    *
+    * As times from input should always be either xx:00, xx:15, xx:30 or xx:45, it makes sense to have 15min as the
+    * basic unit. Quarters are counted after the begin of the day, e.g.
+    * 0:15  = 1,
+    * 01:00 = 4
+    */
   val quarters: Int = {
     val parts: Array[String] = timeStr.split(":")
     val hours: Int = parts(0).toInt
@@ -18,7 +25,7 @@ case class TimeStamp(timeStr: String) {
     * gaps fit certain period, like when calculating evening hours.
     *
     * @param that The second timestamp, should be later than the first.
-    * @return
+    * @return     Number of 15mins between the timestamps
     */
   def gap(that: TimeStamp): Int = {
     math.max(0, that.quarters - quarters)
@@ -26,8 +33,8 @@ case class TimeStamp(timeStr: String) {
 
   /** Whether this timestamp is before the timestamp in parameter
     *
-    * @param that
-    * @return
+    * @param that The second timestamp
+    * @return     True if this timestamp is before, false otherwise (including same timestamps)
     */
   def isBefore(that: TimeStamp): Boolean = {
     quarters < that.quarters
