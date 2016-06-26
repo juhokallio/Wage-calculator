@@ -1,5 +1,6 @@
-import org.scalactic.TolerantNumerics
-import org.scalatest.{FlatSpec, Matchers}
+package juho.wagecalculator
+
+import org.scalatest.FlatSpec
 
 /**
   * Created by juho on 3/23/16.

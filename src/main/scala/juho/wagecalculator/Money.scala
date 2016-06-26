@@ -1,3 +1,5 @@
+package juho.wagecalculator
+
 /** A class for representing money
   *
   *

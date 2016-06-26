@@ -1,3 +1,5 @@
+package juho.wagecalculator
+
 import org.scalatest.FlatSpec
 
 /**

@@ -1,3 +1,5 @@
+package juho.wagecalculator
+
 /**
   * Created by juho on 6/24/16.
   */

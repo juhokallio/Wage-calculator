@@ -1,3 +1,5 @@
+package juho.wagecalculator
+
 /** Class for managing points in time. The unit used here is always quarters. Construction is done from strings, which
   * should be in form of 12:00. Values outside 0:00-24:00 will throw error.
   */

@@ -1,4 +1,7 @@
+package juho.wagecalculator
+
 import org.scalatest.FlatSpec
+
 /**
   * Created by juho on 6/26/16.
   */
