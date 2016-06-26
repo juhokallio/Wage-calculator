@@ -9,7 +9,14 @@ case class Money private (units: Int, quarterDivisions: Int) {
   }
 
   def +(that: Money): Money = {
-    Money(units + that.units, quarterDivisions)
+    val newUnits: Int = {
+      if (quarterDivisions > that.quarterDivisions)
+        units + math.pow(4, quarterDivisions - that.quarterDivisions).toInt * that.units
+      else
+        math.pow(4, that.quarterDivisions - quarterDivisions).toInt * units + that.units
+    }
+
+    Money(newUnits, math.max(quarterDivisions, that.quarterDivisions))
   }
 
   def divideBy4(): Money = {
