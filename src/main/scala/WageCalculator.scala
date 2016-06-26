@@ -3,8 +3,8 @@
   */
 object WageCalculator {
 
-  val normalCompensation: Money = Money(3, 75) // TODO: divide by 4 or multiply with 0.25
-  val eveningCompensation: Money = normalCompensation + Money(1, 15) // divide by 4 or multiply with 0.25
+  val normalCompensation: Money = Money.fromCurrency(3, 75).divideBy4()
+  val eveningCompensation: Money = normalCompensation + Money.fromCurrency(1, 15).divideBy4()
   val normalDayStart: TimeStamp = TimeStamp("6:00")
   val normalDayEnd: TimeStamp = TimeStamp("18:00")
 

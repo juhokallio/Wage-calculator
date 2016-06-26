@@ -2,12 +2,36 @@
   *
   *
   */
-case class Money(dollars: Int, cents: Int) {
+case class Money private (units: Int, quarterDivisions: Int) {
+
   def *(x: Int): Money = {
-    Money(dollars * x, cents * x)
+    Money(units * x, quarterDivisions)
   }
 
   def +(that: Money): Money = {
-    Money(dollars + that.dollars, cents * that.cents)
+    Money(units + that.units, quarterDivisions)
   }
+
+  def divideBy4(): Money = {
+    Money(units, quarterDivisions + 1)
+  }
+
+  override def toString: String = {
+    val divider: Int = math.pow(4, quarterDivisions).toInt
+    val dollars: Int = units / (100 * divider)
+    val remainingUnits: Int = units % (100 * divider)
+
+    //TODO: this leads to rounding errors, get them first with tests and fix later
+
+    val centsStr: String = {
+      val cents: Int = remainingUnits / divider
+      if (cents > 9) cents.toString else "0" + cents
+    }
+
+    "$" + dollars + "." + centsStr
+  }
+}
+
+object Money {
+  def fromCurrency(dollars: Int, cents: Int): Money = Money((dollars * 100 + cents) * 4, 1)
 }
