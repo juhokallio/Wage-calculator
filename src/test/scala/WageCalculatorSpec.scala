@@ -123,7 +123,6 @@ class WageCalculatorSpec extends FlatSpec {
   }
 
 
-
   "plus100work" should "be correct with normal days" in {
     assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("7:00")) == 0)
     assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("18:00")) == 0)
@@ -140,5 +139,21 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.plus100work(2, TimeStamp("22:00"), TimeStamp("11:00")) == 6)
     assert(WageCalculator.plus100work(12, TimeStamp("22:00"), TimeStamp("11:00")) == 16)
     assert(WageCalculator.plus100work(2, TimeStamp("22:00"), TimeStamp("10:00")) == 2)
+  }
+
+
+  "compensation" should "be correct with normal day" in {
+    assert(WageCalculator.compensation(0, TimeStamp("11:00"), TimeStamp("12:00")).toString == "$3.75")
+    assert(WageCalculator.compensation(0, TimeStamp("11:00"), TimeStamp("11:30")).toString == "$1.88")
+  }
+
+  "compensation" should "be correct with evening work" in {
+    assert(WageCalculator.compensation(0, TimeStamp("22:00"), TimeStamp("23:00")).toString == "$4.90")
+    assert(WageCalculator.compensation(0, TimeStamp("22:00"), TimeStamp("22:15")).toString == "$1.23")
+  }
+
+  "compensation" should "be correct with long day" in {
+    assert(WageCalculator.compensation(0, TimeStamp("6:00"), TimeStamp("14:00")).toString == "$30.00")
+    assert(WageCalculator.compensation(0, TimeStamp("6:00"), TimeStamp("15:00")).toString == "$34.69")
   }
 }

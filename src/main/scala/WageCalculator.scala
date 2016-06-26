@@ -22,8 +22,11 @@ object WageCalculator {
   def compensation(priorWork: Int, start: TimeStamp, end: TimeStamp): Money = {
     val normalMoney: Money = normalCompensation * normalQuarters(priorWork, start, end)
     val eveningMoney: Money = eveningCompensation * eveningWork(start, end)
+    val plus25money: Money = (normalCompensation + normalCompensation.divideBy4()) * plus25work(priorWork, start, end)
+    val plus50money: Money = (normalCompensation + normalCompensation.divideBy4() + normalCompensation.divideBy4()) * plus50work(priorWork, start, end)
+    val plus100money: Money = (normalCompensation + normalCompensation) * plus100work(priorWork, start, end)
 
-    normalMoney + eveningMoney
+    normalMoney + eveningMoney + plus25money + plus50money + plus100money
   }
 
   def totalQuarters(start: TimeStamp, end: TimeStamp): Int = {
