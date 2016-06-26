@@ -21,10 +21,9 @@ case class Money private (units: Int, quarterDivisions: Int) {
     val dollars: Int = units / (100 * divider)
     val remainingUnits: Int = units % (100 * divider)
 
-    //TODO: this leads to rounding errors, get them first with tests and fix later
-
     val centsStr: String = {
-      val cents: Int = remainingUnits / divider
+      val succesfulRounding: Boolean = remainingUnits % divider * 2 < divider
+      val cents: Int = if (succesfulRounding) remainingUnits / divider else 1 + remainingUnits / divider
       if (cents > 9) cents.toString else "0" + cents
     }
 
@@ -33,5 +32,5 @@ case class Money private (units: Int, quarterDivisions: Int) {
 }
 
 object Money {
-  def fromCurrency(dollars: Int, cents: Int): Money = Money((dollars * 100 + cents) * 4, 1)
+  def fromCurrency(dollars: Int, cents: Int): Money = Money(dollars * 100 + cents, 0)
 }
