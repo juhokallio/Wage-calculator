@@ -57,6 +57,7 @@ object WageCalculator {
   }
 
   def plus25work(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
-    return 0
+    val overtime = math.max(0, priorWork + totalQuarters(start, end) - 32)
+    math.min(overtime, 8)
   }
 }
