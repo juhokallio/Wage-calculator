@@ -60,4 +60,13 @@ object WageCalculator {
     val overtime = math.max(0, priorWork + totalQuarters(start, end) - 32)
     math.min(overtime, 8)
   }
+
+  def plus50work(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
+    val overtime = math.max(0, priorWork + totalQuarters(start, end) - 40)
+    math.min(overtime, 8)
+  }
+
+  def plus100work(priorWork: Int, start: TimeStamp, end: TimeStamp): Int = {
+    math.max(0, priorWork + totalQuarters(start, end) - 48)
+  }
 }

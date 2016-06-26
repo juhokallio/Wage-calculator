@@ -14,6 +14,7 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.totalQuarters(TimeStamp("23:00"), TimeStamp("1:00")) == 8)
   }
 
+
   "normalQuarters" should "be correct with short new hours" in {
     assert(WageCalculator.normalQuarters(0, TimeStamp("11:00"), TimeStamp("12:00")) == 4)
     assert(WageCalculator.normalQuarters(30, TimeStamp("11:00"), TimeStamp("12:00")) == 2)
@@ -48,6 +49,7 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.normalQuarters(28, TimeStamp("17:00"), TimeStamp("7:00")) == 4)
   }
 
+
   "eveningWork" should "be correct with no work outside normal hours" in {
     assert(WageCalculator.eveningWork(TimeStamp("6:00"), TimeStamp("9:00")) == 0)
     assert(WageCalculator.eveningWork(TimeStamp("13:30"), TimeStamp("18:00")) == 0)
@@ -77,9 +79,11 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.eveningWork(TimeStamp("3:00"), TimeStamp("2:00")) == 44)
   }
 
+
   "plus25work" should "be correct with normal days" in {
     assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("7:00")) == 0)
     assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("14:00")) == 0)
+    assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("14:30")) == 2)
     assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("16:00")) == 8)
     assert(WageCalculator.plus25work(0, TimeStamp("6:00"), TimeStamp("17:00")) == 8)
   }
@@ -94,5 +98,47 @@ class WageCalculatorSpec extends FlatSpec {
     assert(WageCalculator.plus25work(2, TimeStamp("22:00"), TimeStamp("7:00")) == 6)
     assert(WageCalculator.plus25work(22, TimeStamp("22:00"), TimeStamp("7:00")) == 8)
     assert(WageCalculator.plus25work(2, TimeStamp("22:00"), TimeStamp("6:00")) == 2)
+  }
+
+
+  "plus50work" should "be correct with normal days" in {
+    assert(WageCalculator.plus50work(0, TimeStamp("6:00"), TimeStamp("7:00")) == 0)
+    assert(WageCalculator.plus50work(0, TimeStamp("6:00"), TimeStamp("16:00")) == 0)
+    assert(WageCalculator.plus50work(0, TimeStamp("6:00"), TimeStamp("17:15")) == 5)
+    assert(WageCalculator.plus50work(0, TimeStamp("6:00"), TimeStamp("18:00")) == 8)
+    assert(WageCalculator.plus50work(0, TimeStamp("7:00"), TimeStamp("19:00")) == 8)
+    assert(WageCalculator.plus50work(0, TimeStamp("7:00"), TimeStamp("20:00")) == 8)
+  }
+
+  "plus50work" should "be correct with prior work" in {
+    assert(WageCalculator.plus50work(1, TimeStamp("6:00"), TimeStamp("16:00")) == 1)
+    assert(WageCalculator.plus50work(9, TimeStamp("6:00"), TimeStamp("16:00")) == 8)
+  }
+
+  "plus50work" should "be empty with overnight shift" in {
+    assert(WageCalculator.plus50work(0, TimeStamp("22:00"), TimeStamp("9:00")) == 4)
+    assert(WageCalculator.plus50work(2, TimeStamp("22:00"), TimeStamp("9:00")) == 6)
+    assert(WageCalculator.plus50work(22, TimeStamp("22:00"), TimeStamp("9:00")) == 8)
+    assert(WageCalculator.plus50work(2, TimeStamp("22:00"), TimeStamp("8:00")) == 2)
+  }
+
+
+
+  "plus100work" should "be correct with normal days" in {
+    assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("7:00")) == 0)
+    assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("18:00")) == 0)
+    assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("18:15")) == 1)
+    assert(WageCalculator.plus100work(0, TimeStamp("6:00"), TimeStamp("23:00")) == 20)
+  }
+
+  "plus100work" should "be correct with prior work" in {
+    assert(WageCalculator.plus100work(1, TimeStamp("6:00"), TimeStamp("18:00")) == 1)
+  }
+
+  "plus100work" should "be empty with overnight shift" in {
+    assert(WageCalculator.plus100work(0, TimeStamp("22:00"), TimeStamp("11:00")) == 4)
+    assert(WageCalculator.plus100work(2, TimeStamp("22:00"), TimeStamp("11:00")) == 6)
+    assert(WageCalculator.plus100work(12, TimeStamp("22:00"), TimeStamp("11:00")) == 16)
+    assert(WageCalculator.plus100work(2, TimeStamp("22:00"), TimeStamp("10:00")) == 2)
   }
 }
