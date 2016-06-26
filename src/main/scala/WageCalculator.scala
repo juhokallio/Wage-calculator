@@ -8,7 +8,7 @@ object WageCalculator {
   val normalDayStart: TimeStamp = TimeStamp("6:00")
   val normalDayEnd: TimeStamp = TimeStamp("18:00")
 
-  def parseCsv(): Map[Long, Seq[WorkTime]] = {
+  def parseCsv(): Map[Long, Seq[Money]] = {
     null
   }
 
