@@ -64,10 +64,7 @@ object WageCalculator {
       dayHoursStart.gap(dayHoursEnd)
     else {
       // The normal hours in the beginning and end of the overnight shift
-      val startHours = dayHoursStart.gap(normalDayEnd)
-      val endHours = normalDayStart.gap(dayHoursEnd)
-
-      startHours + endHours
+      dayHoursStart.gap(normalDayEnd) + normalDayStart.gap(dayHoursEnd)
     }
   }
 
