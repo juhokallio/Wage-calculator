@@ -1,6 +1,6 @@
 package juho.wagecalculator
 
-import scala.util.control.TailCalls.TailRec
+import scala.annotation.tailrec
 
 /** Reader for salary CSV
   */
@@ -11,36 +11,43 @@ object CsvReader {
     * @param lines  Csv file as list of lines
     * @return       Users with salaries in a Seq of UserSalary objects
     */
-  def parseCsv(lines: List[String]): Seq[UserSalary] = {
-    val userMarkingsMap: Map[Long, Seq[UserMarking]] = lines.drop(1)
+  def parseCsv(lines: List[String]): Seq[EmployeeSalary] = {
+    val userMarkingsMap: Map[Long, Seq[EmployeeMarking]] = lines.drop(1)
         .map(_.split(","))
-        .map(l => new UserMarking(l))
+        .map(l => new EmployeeMarking(l))
         .groupBy(_.id)
 
     val salaries: Seq[Money] = userMarkingsMap.values
-        .map(ms => parseCompensation(ms, LastWork(0, "")))
+        .map(ms => parseCompensation(ms))
         .toSeq
+
     userMarkingsMap.values
         .map(_.head)
         .zip(salaries)
-        .map{ case (m, s) => UserSalary(m.id, m.name, s.toString)}
+        .map{ case (m, s) => EmployeeSalary(m.id, m.name, s.toString) }
         .toSeq
   }
 
   /** Parses the salary of a user from the seq of user markings
     *
-    * @param userMarkings Work markings of one user
-    * @param lastWork     Prior work
-    * @return             Total compensation employee should receive
+    * @param markings           Work markings of one employee
+    * @param lastWork           Prior work
+    * @param priorCompensation  Prior compensation
+    * @return                   Total compensation employee should receive
     */
-  @TailRec
-  def parseCompensation(userMarkings: Seq[UserMarking], lastWork: LastWork): Money = {
-    if (userMarkings.isEmpty)
-      return Money.fromCurrency(0, 0)
-    val first: UserMarking = userMarkings.head
+  @tailrec
+  def parseCompensation(
+                         markings: Seq[EmployeeMarking],
+                         lastWork: LastWork = LastWork(),
+                         priorCompensation: Money = Money(0, 0)
+                       ): Money = {
+    if (markings.isEmpty)
+      return priorCompensation
+    val first: EmployeeMarking = markings.head
     val sameDayWork: Int = if (first.date.equals(lastWork.date)) lastWork.time else 0
     val nextLastWork = LastWork(WageCalculator.totalQuarters(first.start, first.end) + sameDayWork, first.date)
-    WageCalculator.compensation(sameDayWork, first.start, first.end) + parseCompensation(userMarkings.tail, nextLastWork)
+    val compensation: Money = priorCompensation + WageCalculator.compensation(sameDayWork, first.start, first.end)
+    parseCompensation(markings.tail, nextLastWork, compensation)
   }
 
   /** Container for earlier work done
@@ -48,7 +55,7 @@ object CsvReader {
     * @param time Amount of the work in quarters
     * @param date Date when the work started
     */
-  case class LastWork(time: Int, date: String)
+  case class LastWork(time: Int = 0, date: String = "")
 
   /** Wrapper for CSV file line
     *
@@ -60,7 +67,7 @@ object CsvReader {
     * @param start  Timestamp of the start of the marking
     * @param end    Timestamp of the end of the marking
     */
-  case class UserMarking(name: String, id: Long, date: String, start: TimeStamp, end: TimeStamp) {
+  case class EmployeeMarking(name: String, id: Long, date: String, start: TimeStamp, end: TimeStamp) {
     def this(line: Array[String]) = this(line(0), line(1).toLong, line(2), TimeStamp(line(3)), TimeStamp(line(4)))
   }
 
@@ -70,5 +77,5 @@ object CsvReader {
     * @param name   Name of the user
     * @param salary Salary to be received
     */
-  case class UserSalary(id: Long, name: String, salary: String)
+  case class EmployeeSalary(id: Long, name: String, salary: String)
 }
