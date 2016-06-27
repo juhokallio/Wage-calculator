@@ -26,6 +26,7 @@ object CsvReader {
         .zip(salaries)
         .map{ case (m, s) => EmployeeSalary(m.id, m.name, s.toString) }
         .toSeq
+        .sortBy(_.id)
   }
 
   /** Parses the salary of a user from the seq of user markings
