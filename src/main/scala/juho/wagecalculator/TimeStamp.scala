@@ -14,8 +14,16 @@ case class TimeStamp(timeStr: String) {
     */
   val quarters: Int = {
     val parts: Array[String] = timeStr.split(":")
+    if (parts.length != 2)
+      throw new IllegalArgumentException("TimeStamp constructor parameter should be form of xx:yy")
     val hours: Int = parts(0).toInt
+    if (hours < 0 || hours > 24)
+      throw new IllegalArgumentException("TimeStamp hours should be between 0-24")
     val minutes: Int = parts(1).toInt
+    if (minutes != 0 && minutes != 15 && minutes !=30 && minutes != 45)
+      throw new IllegalArgumentException("Minutes should be either 0, 15, 30 or 45")
+    if (hours == 24 && minutes != 0)
+      throw new IllegalArgumentException("Only 24:00 is allowed of 24:xx times")
     hours * 4 + minutes / 15
   }
 

@@ -33,4 +33,31 @@ class TimeStampSpec extends FlatSpec {
   "isBefore" should "return false when the timestamps are the same" in {
     assert(!TimeStamp("6:00").isBefore(TimeStamp("6:00")))
   }
+
+  "constructing" should "throw IllegalArgumentException with empty string" in {
+    intercept[IllegalArgumentException] {
+      TimeStamp("")
+    }
+  }
+
+  "constructing" should "throw IllegalArgumentException with bad minutes" in {
+    intercept[IllegalArgumentException] {
+      TimeStamp("12:14")
+    }
+    intercept[IllegalArgumentException] {
+      TimeStamp("12:60")
+    }
+  }
+
+  "constructing" should "throw IllegalArgumentException with bad hours" in {
+    intercept[IllegalArgumentException] {
+      TimeStamp("25:00")
+    }
+  }
+
+  "constructing" should "throw IllegalArgumentException with bad time with ok minutes and hours" in {
+    intercept[IllegalArgumentException] {
+      TimeStamp("24:15")
+    }
+  }
 }
