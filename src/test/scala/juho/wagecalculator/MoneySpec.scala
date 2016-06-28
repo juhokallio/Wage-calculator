@@ -57,4 +57,19 @@ class MoneySpec extends FlatSpec {
     val hourWith25extra: Money = quarterWith25extra * 4
     assert(hourWith25extra.toString == "$4.69", "multiply failed")
   }
+
+  "operations with big money" should "work correctly" in {
+    val m = Money.fromCurrency(1000000, 1)
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4()
+      .divideBy4() * math.pow(4, 10).toInt
+    assert(m.toString == "$1000000.01")
+  }
 }

@@ -8,7 +8,7 @@ package juho.wagecalculator
   * divideBy4. Here fractions are avoided by simply keeping count of the number of divisions, which is in fact the
   * quarterDivisions parameter.
   */
-case class Money private (units: Int, quarterDivisions: Int) {
+case class Money private (units: Long, quarterDivisions: Int) {
 
   /** Multiplies money with an integer
     *
@@ -29,7 +29,7 @@ case class Money private (units: Int, quarterDivisions: Int) {
     * @return     New Money object
     */
   def +(that: Money): Money = {
-    val newUnits: Int = {
+    val newUnits: Long = {
       if (quarterDivisions > that.quarterDivisions)
         units + math.pow(4, quarterDivisions - that.quarterDivisions).toInt * that.units
       else
@@ -61,12 +61,12 @@ case class Money private (units: Int, quarterDivisions: Int) {
     */
   override def toString: String = {
     val divider: Int = math.pow(4, quarterDivisions).toInt
-    val dollars: Int = units / (100 * divider)
-    val remainingUnits: Int = units % (100 * divider)
+    val dollars: Long = units / (100 * divider)
+    val remainingUnits: Long = units % (100 * divider)
 
     val centsStr: String = {
       val succesfulRounding: Boolean = remainingUnits % divider * 2 < divider
-      val cents: Int = if (succesfulRounding) remainingUnits / divider else 1 + remainingUnits / divider
+      val cents: Long = if (succesfulRounding) remainingUnits / divider else 1 + remainingUnits / divider
       if (cents > 9) cents.toString else "0" + cents
     }
 
