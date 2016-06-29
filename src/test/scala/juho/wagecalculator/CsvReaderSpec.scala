@@ -51,7 +51,7 @@ class CsvReaderSpec extends FlatSpec {
 
 
   "parseCsv" should "be correct with simple case" in {
-    val lines = List(
+    val lines = Seq(
       "Person Name,Person ID,Date,Start,End",
       "Larry Lolcode,3,7.3.2014,6:00,11:00"
     )

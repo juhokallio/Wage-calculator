@@ -47,7 +47,7 @@ class WageCalculatorServlet extends ScalatraServlet with FileUploadSupport {
     */
   post("/wages") {
     val file: FileItem = fileParams("wageCsv")
-    val lines: List[String] = Source.fromInputStream(file.getInputStream).getLines.toList
+    val lines: Seq[String] = Source.fromInputStream(file.getInputStream).getLines.toSeq
     val salaries: Seq[EmployeeSalary] = CsvReader.parseCsv(lines)
 
     <html>

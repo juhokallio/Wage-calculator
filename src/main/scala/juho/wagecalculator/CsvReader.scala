@@ -11,7 +11,7 @@ object CsvReader {
     * @param lines              Csv file as list of lines
     * @return                   Users with salaries in a Seq of UserSalary objects
     */
-  def parseCsv(lines: List[String]): Seq[EmployeeSalary] = {
+  def parseCsv(lines: Seq[String]): Seq[EmployeeSalary] = {
     val userMarkings: Seq[Seq[EmployeeMarking]] = lines.drop(1)
         .map(_.split(","))
         .map(l => new EmployeeMarking(l))
